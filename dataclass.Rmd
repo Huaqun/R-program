@@ -1,0 +1,237 @@
+---
+title: "dataclass"
+author: "zw"
+date: "2017年10月16日"
+output: html_document
+---
+#apply家族区别在于input和output
+apply(df,1,mean) #1表示行，2表示列
+lapply() 
+sapply()
+vapply()
+
+#建议：了解Gatner技术炒作同期报告；掌握好向量运算
+
+#标量scalar：只包含一个元素的向量
+##创建数值、字符、逻辑标量；字符型标量要加引号
+a <-"zw"
+print("Hello Word")
+
+###NA、NaN、NULL的区别
+-NA表示缺失值，占位置；NULL表示不存在值，不占位置
+
+z <-NULL
+for(i in 1:10){
+if(i%%2==0)z<-c(z,i)} #%%表示除，c(z,i)表示把所有结果结合在一起输出
+z
+
+z <-NA  #NA占位置
+for(i in 1:10){
+if(i%%2==0)z<-c(z,i)}
+z
+
+##判断一个向量是否为NA：is.na();is.nan();is.infinite();
+##na.omit()表示删除NA
+
+#向量：创建、索引、排序、增加、删除、拼接比较、赋值
+
+#创建双精(double/numeric)向量
+dbl_var <-c(1,2.5,4.5)
+#创建整型(integer)向量
+int_var <-c(1L,6L,10L)
+#创建字符型(character)向量
+b <-c("one","two","three")
+#创建逻辑(logic)向量
+c <-c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE)
+
+#is.xxx 表示是什么？
+#as.xxx 表示把什么转换成什么
+
+###使用seq()、rep()创建向量
+x <-1:100
+
+x <-1L:100L 
+is.integer(x)
+
+#选择1到100的奇数,by间隔2
+x <-seq(from=1,to=100,by=2)  
+
+#Sys.Date()表示今天的日期
+a <-seq.Date(as.Date("2017-01-01"),Sys.Date(),by="day")
+
+x <-rep(8,4) #8重复4遍
+#1到6,1重复1次，2重复2次。。。。each只能做1个
+rep(1:6,1:6)
+rep(1:6,each=2) #表示1到6，全部重复2次
+
+#做出x1 x3 x5 x7 x9 y2 y4 y6 y8 y10
+#方法一
+a <-paste("x",seq(1,10,by=2),sep="")
+b <-paste("y",seq(2,10,by=2),sep="")
+c <-c(a,b)
+
+#方法二 paste0表示不用输sep,表示按x,y依次循环
+c <-paste0(c("x","y"),1:10)
+
+#思考题:如何将结果变成X1，X3，X5，X7。。。
+a <-paste("x",seq(1,10,by=2),sep="",collapse = ",")
+b<-paste("y",seq(2,10,by=2),sep = "",collapse = ",")
+```{r}
+#删除偶数
+x <-1:100
+x <-x[-seq(2,100,by=2)]
+x
+```
+```{r}
+#计算X的一阶段差分，并用NA值补足值
+x <-c(88,5,12,13,20,11)
+c(NA,x[-1]-x[-length(x)])
+
+```
+###获得向量的长度
+```{r}
+x <-c(1,2,4)
+length(x)
+#遍历向量
+seq_along(x)=1:length(x)
+for(i in 1:length(x))
+for(i in seq_along(x))
+```
+```{r}
+x <-1:100
+n <-length(x)
+for(i in 1:100){
+print(x[i])  
+}
+```
+#课堂小结
+c()
+#rep(),rep(,each)
+#seq(),seq.date()
+#paste(),paste0(),paste(,collapse)
+#length()
+#差分
+#循环输出x[i]
+#输出26个字母
+
+#作业1：创建向量'a'，'b','c','a','b','c',1,2,3,4,5,7,9,11,13,15,8,9,8,9,8,9,8,9,8,9,8,9
+```{r}
+a <-rep(letters[1:3],2)
+b <-1:15
+b <-b[-c(6,8,12,14)]
+c <-rep(c(8,9),6)
+d <-c(a,b,c)
+d
+```
+
+letters #小写
+LETTERS #大写
+
+#作业2：创建向量'a1','b3','c5','d7','e9','A2','B4','C6','D8'
+
+```{r}
+a <-paste0(letters[1:5],seq(1,9,by=2),rep="")
+b <-paste0(LETTERS[1:4],seq(2,8,by=2),rep="")
+c <-c(a,b)
+c
+```
+
+#无论什么时候都要UTF-8
+Encoding()  #看编码
+iconv(a,"UTF-8","GBK") #转码UTF-8转到GBK
+
+#中文文件的转码
+read.table(,,fileEncoding="GB2312") #如果源文件是GB2312
+
+
+#写数据库
+write.csv()
+
+dbSendQuery(con,"set.name=utf8")
+
+#不要用记事本和excl写文件
+
+
+
+#向量取子集
+```{r}
+set.seed(123)
+x <-sample(1:100,50,replace = T)
+head(x)
+
+#取出x中的奇数
+x[x%%2==1]
+x[x%%2!=0]
+
+
+y <-x[1:5] #使用数字向量取向量
+y[c(T,F,T,F,T)] #使用逻辑向量来取值
+
+
+#取y中的奇数
+y%%2==1
+
+#取出大于25的数，大于25的数字有多少个
+x[x>25]
+length(x[x>25])
+
+#计算大于25的数字的和
+sum(x[x>25])
+
+
+a<-names(y)<-sample(letters,5)a#为y的每一个值命名一个字母
+y[c("l","u","t","s")] #用名字取值
+y[sample(a,10,replace=T)]
+
+#（1）提取x中符合>=21,<=55条件的数
+x[x>=21 & x<=55]
+#（2）列出大于50分数据的位置
+which(x>50)
+#（3）将（2）中计算的结果提取出来
+x[which(x>50)]
+#求和
+sum(x>50)
+
+```
+
+
+```{r}
+x<-1:10
+#判断向量，输出T 或F
+any(x>8)
+all(x>88)
+all(x>0)
+```
+
+```{r}
+#k是次数,计算游程
+#方法一：all()+循环
+findruns1 <- function(x,k) {
+   n <- length(x)
+   runs <- vector(length=n)
+   count <- 0
+   for (i in 1:(n-k+1)) {
+      if (all(x[i:(i+k-1)]==1)) {
+         count <- count + 1
+         runs[count] <- i
+      }
+   }
+   if (count > 0) {
+      runs <- runs[1:count]
+   } else runs <- NULL
+   return(runs)
+}
+```
+
+
+#如果查找1出现n次的位置呢？
+n <-2
+seq(1,n)
+c(x[-seq(1,n)],rep(0,n))
+
+###课堂小结
+#向量取子集的几种方法
+x[1:2]
+x[c(T,F)]
+x[c("a","b")]
+x[x>10]
